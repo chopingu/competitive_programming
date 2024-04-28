@@ -1,2 +1,3 @@
-# cp
-Solutions to competitive programming tasks
+```
+Currently migrating old solutions. Too many of them...
+```
