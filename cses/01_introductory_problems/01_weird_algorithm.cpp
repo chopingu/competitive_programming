@@ -7,4 +7,13 @@ typedef long long ll;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
+    ll n;
+    cin >> n;
+
+    while(n ^ 1) {
+        cout << n << ' ';
+        (n & 1) ? n = 3 * n + 1 : n /= 2;
+    }
+
+    cout << 1;
 }

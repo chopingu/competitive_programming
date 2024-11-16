@@ -7,4 +7,10 @@ typedef long long ll;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
+    ll n;
+    cin >> n;
+
+    auto rec = [&](int cur, int aux, int tar, int rem, auto&& rec) -> void {
+        rec(
+    };
 }
