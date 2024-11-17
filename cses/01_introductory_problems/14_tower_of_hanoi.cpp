@@ -11,6 +11,14 @@ int main() {
     cin >> n;
 
     auto rec = [&](int cur, int aux, int tar, int rem, auto&& rec) -> void {
-        rec(
+        if(!rem)
+            return;
+
+        rec(cur, tar, aux, rem - 1, rec);
+        cout << cur << ' ' << tar << '\n';
+        rec(aux, cur, tar, rem - 1, rec);
     };
+
+    cout << (1 << n) - 1 << '\n';
+    rec(1, 2, 3, n, rec);
 }
