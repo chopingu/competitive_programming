@@ -42,10 +42,10 @@ int main() {
     }
 
     for(auto i: ans1)
-        cout << !!i << ' ';
+        cout << i << ' ';
 
     cout << '\n';
 
     for(auto i: ans2)
-        cout << !!i << ' ';
+        cout << i << ' ';
 }

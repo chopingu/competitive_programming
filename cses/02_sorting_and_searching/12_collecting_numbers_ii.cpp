@@ -10,25 +10,51 @@ int main() {
     ll n, m;
     cin >> n >> m;
 
-    vector<ll> id(n), x(n);
+    vector<ll> pos(n), x(n);
     for(ll i = 0; i < n; i++) {
         ll &a = x[i];
         cin >> a, --a;
 
-        id[a] = i;
+        pos[a] = i;
     }
 
     ll ans = 1;
     for(ll i = 0; i < n - 1; i++)
-        ans += (dp[i] > dp[i + 1]);
+        ans += (pos[i] > pos[i + 1]);
 
     for(ll i = 0; i < m; i++) {
         ll a, b;
         cin >> a >> b, --a, --b;
-        
-        if(a > b)
+
+        if(a > b) 
             swap(a, b);
 
-        ans -= (
+        if(!(a ^ b)) {
+            cout << ans << '\n';
+            continue;
+        }
+
+        if(x[a] > x[b]) {
+            if(x[a] < n - 1 && a < pos[x[a] + 1] && b > pos[x[a] + 1]) ++ans;
+            if(x[b] && b > pos[x[b] - 1] && a < pos[x[b] - 1]) ++ans;
+            if(x[a] - x[b] > 1 && b > pos[x[b] + 1] && a < pos[x[b] + 1]) --ans;
+            if(x[a] - x[b] > 1 && a < pos[x[a] - 1] && b > pos[x[a] - 1]) --ans;
+            if(x[a] == x[b] + 1) ans--;
+        }
+
+        if(x[a] < x[b]) {
+            if(x[a] && a < pos[x[a] - 1] && b > pos[x[a] - 1]) --ans;
+            if(x[b] < n - 1 && b > pos[x[b] + 1] && a < pos[x[b] + 1]) --ans;
+            if(x[b] - x[a] > 1 && a < pos[x[a] + 1] && b > pos[x[a] + 1]) ++ans;
+            if(x[b] - x[a] > 1 && b > pos[x[b] - 1] && a < pos[x[b] - 1]) ++ans;
+            if(x[b] == x[a] + 1) ans++;
+        }
+
+        pos[x[a]] = b;
+        pos[x[b]] = a;
+
+        swap(x[a], x[b]);
+
+        cout << ans << '\n';
     }
 }
