@@ -14,6 +14,7 @@ int main() {
     for(auto &i: c)
         cin >> i;
 
+    /*
     const ll mod = 1e9 + 7;
     ll memo[x + 1]{};
     memo[0] = 1;
@@ -23,4 +24,27 @@ int main() {
                 memo[i + c[j]] += memo[i], memo[i + c[j]] %= mod;
 
     cout << memo[x];
+    */
+
+    const ll mod = 1e9 + 7;
+    vector<ll> memo(x + 1, -1);
+    auto dp = [&](ll cur, auto&& dp) -> ll {
+        if(!cur)
+            return 1;
+
+        if(cur < 0)
+            return 0;
+
+        ll &ans = memo[cur];
+        if(ans ^ -1)
+            return ans;
+
+        ans = 0;
+        for(ll i = 0; i < n; i++)
+            ans += dp(cur - c[i], dp), ans %= mod;
+
+        return ans;
+    };
+
+    cout << dp(x, dp);
 }

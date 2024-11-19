@@ -23,4 +23,28 @@ int main() {
                 memo[j + c[i]] += memo[j], memo[j + c[i]] %= mod;
 
     cout << memo[x];
+
+    /* TOO SLOW and TOO MUCH MEMORY CONSUMPTION
+    const ll mod = 1e9 + 7;
+    vector<vector<ll>> memo(n, vector<ll>(x + 1, -1));
+    auto dp = [&](ll id, ll cur, auto&& dp) -> ll {
+        if(id == n && !cur)
+            return 1;
+
+        if(id == n)
+            return 0;
+
+        ll &ans = memo[id][cur];
+        if(ans ^ -1)
+            return ans;
+
+        ans = 0;
+        for(ll i = 0; i <= cur / c[id]; i++) 
+            ans += dp(id + 1, cur - i * c[id], dp), ans %= mod;
+
+        return ans;
+    };
+
+    cout << dp(0, x, dp);
+    */
 }

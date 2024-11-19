@@ -17,6 +17,7 @@ int main() {
     vector<ll> dy = {0, 1};
     vector<ll> dx = {1, 0};
 
+    /*
     ll const mod = 1e9 + 7;
     ll memo[n][n]{};
     memo[0][0] = (grid[0][0] != '*');
@@ -30,4 +31,29 @@ int main() {
             }
 
     cout << memo[n - 1][n - 1];
+    */
+
+    ll const mod = 1e9 + 7;
+    vector<vector<ll>> memo(n, vector<ll>(n, -1));
+    auto dp = [&](ll y, ll x, auto&& dp) -> ll {
+        if(y >= n || x >= n || grid[y][x] == '*') 
+            return 0;
+
+        if(y == n - 1 && x == n - 1)
+            return 1;
+
+        ll &ans = memo[y][x];
+        if(ans ^ -1)
+            return ans;
+
+        ans = 0;
+        for(ll i = 0; i < 2; i++) {
+            ll y2 = y + dy[i], x2 = x + dx[i];
+            ans += dp(y2, x2, dp), ans %= mod;
+        }
+
+        return ans;
+    };
+
+    cout << dp(0, 0, dp);
 }

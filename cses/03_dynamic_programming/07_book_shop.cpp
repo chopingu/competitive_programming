@@ -34,4 +34,23 @@ int main() {
         ans = max(ans, i);
 
     cout << ans;
+
+    /* TOO MUCH MEMORY CONSUMPTION
+    vector<vector<ll>> memo(n, vector<ll>(x + 1, -1));
+    auto dp = [&](ll id, ll cur, auto&& dp) -> ll {
+        if(cur < 0)
+            return -1e15;
+
+        if(id == n)
+            return 0;
+
+        ll &ans = memo[id][cur];
+        if(ans ^ -1)
+            return ans;
+
+        return ans = max(dp(id + 1, cur - h[id], dp) + s[id], dp(id + 1, cur, dp));
+    };
+
+    cout << dp(0, x, dp);
+    */
 }
