@@ -28,6 +28,17 @@ int main() {
             comp[i] = sz(comp);
 
     n = sz(comp);
-    for(auto i: t)
-        cout << comp[i] << '\n';
+    vector<vector<array<ll, 2>>> al(n + 2, vector<array<ll, 2>>());
+    for(auto [a, b, p]: pr)
+        al[comp[a]].push_back({comp[b], p});
+
+    ll memo[n + 2]{};
+    for(ll i = 0; i <= n; i++) {
+        for(auto [b, p]: al[i])
+            memo[b + 1] = max(memo[b + 1], memo[i] + p);
+
+        memo[i + 1] = max(memo[i + 1], memo[i]);
+    }
+
+    cout << memo[n + 1];
 }
