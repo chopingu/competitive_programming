@@ -9,7 +9,7 @@ int main() {
 
     ll n, m;
     cin >> n >> m;
-
+    
     vector<vector<ll>> al(n);
     for(ll i = 0; i < m; i++) {
         ll a, b;
@@ -18,39 +18,22 @@ int main() {
         al[a].push_back(b);
     }
 
+    const ll mod = 1e9 + 7;
     vector<ll> memo(n, -1);
     auto dp = [&](ll u, auto&& dp) -> ll {
         if(u == n - 1)
             return memo[u] = 1;
         
         ll &ans = memo[u];
-        if(ans ^ -1)
+        if(ans ^ -1) 
             return ans;
 
-        ans = -1e15;
+        ans = 0;
         for(auto v: al[u])
-            ans = max(ans, dp(v, dp));
+            ans += dp(v, dp), ans %= mod;
 
-        return ++ans;
+        return ans;
     };
 
-    if(dp(0, dp) < 0) {
-        cout << "IMPOSSIBLE";
-        return 0;
-    }
-
-    ll u = 0;
-    vector<ll> pt({0});
-    while(dp(u, dp) ^ 1) {
-        for(auto v: al[u]) 
-            if(dp(v, dp) == dp(u, dp) - 1) {
-                u = v;
-                break;
-            }
-        pt.push_back(u);
-    }
-
-    cout << sz(pt) << '\n';
-    for(auto i: pt) 
-        cout << i + 1 << ' ';
+    cout << dp(0, dp);
 }
