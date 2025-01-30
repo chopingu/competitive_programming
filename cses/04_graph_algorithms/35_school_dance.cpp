@@ -19,24 +19,24 @@ int main() {
     }
 
     ll ans = 0;
-    vector<ll> mt(m, -1), vis1(n);
+    vector<ll> mt(m, -1), used(n);
     for(ll i = 0; i < n; i++) {
-        for(auto v: al[i])
-            if(mt[v] == -1) {
-                mt[v] = i;
-                vis1[i] = 1;
+        for(auto j: al[i])
+            if(mt[j] == -1) {
+                mt[j] = i;
+                used[i] = 1;
                 ans++;
                 break;
             }
     }
 
-    vector<ll> vis2(n);
+    vector<ll> vis;
     auto dfs = [&](ll u, auto&& dfs) -> ll {
-        if(vis2[u]) 
+        if(vis[u]) 
             return 0;
 
-        vis2[u] = 1;
-        for(auto v: al[u]) 
+        vis[u] = 1;
+        for(auto v: al[u])
             if(mt[v] == -1 || dfs(mt[v], dfs)) {
                 mt[v] = u;
                 return 1;
@@ -46,8 +46,8 @@ int main() {
     };
 
     for(ll i = 0; i < n; i++) {
-        if(vis1[i]) continue;
-        vis2.assign(n, 0);
+        if(used[i]) continue;
+        vis.assign(n, 0);
         ans += dfs(i, dfs);
     }
 

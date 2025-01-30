@@ -27,41 +27,39 @@ int main() {
             return 0;
         }
 
-    vector<ll> vis(n), e_vis(m);
+    vector<ll> e_vis(m), vis(n);
     auto dfs = [&](ll u, auto&& dfs) -> void {
         vis[u] = 1;
-        for(auto [v, e_id]: al[u]) {
+        for(auto [v, id]: al[u]) {
+            e_vis[id] = 1;
             if(!vis[v])
                 dfs(v, dfs);
-
-            e_vis[e_id] = 1;
         }
     };
 
     dfs(0, dfs);
 
-    for(ll i = 0; i < m; i++) 
+    for(ll i = 0; i < m; i++)
         if(!e_vis[i]) {
             cout << "IMPOSSIBLE";
             return 0;
         }
 
-    vector<ll> ans, e(m);
-    stack<ll> st({0});
-    while(sz(st)) {
-        ll u = st.top();
-        while(--deg[u] >= 0 && e[al[u][deg[u]][1]]) {}
+    e_vis.assign(m, 0);
 
+    vector<ll> ans;
+    stack<ll> s({0});
+    while(sz(s)) {
+        ll u = s.top();
+        while(--deg[u] >= 0 && e_vis[al[u][deg[u]][1]]) {}
         if(deg[u] < 0) {
+            s.pop();
             ans.push_back(u);
-            st.pop();
             continue;
         }
-
-        e[al[u][deg[u]][1]] = 1;
-        st.push(al[u][deg[u]][0]);
+        e_vis[al[u][deg[u]][1]] = 1;
+        s.push(al[u][deg[u]][0]);
     }
-
     reverse(ans.begin(), ans.end());
 
     for(auto i: ans)

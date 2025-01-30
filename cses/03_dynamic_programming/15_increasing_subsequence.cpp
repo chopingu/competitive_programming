@@ -19,7 +19,7 @@ int main() {
     for(ll i = 0; i < n; i++) {
         int id = lower_bound(memo.begin(), memo.begin() + k, x[i]) - memo.begin();
         memo[id] = x[i];
-        k += (id == k);
+        k += (k == id);
     }
 
     cout << k;

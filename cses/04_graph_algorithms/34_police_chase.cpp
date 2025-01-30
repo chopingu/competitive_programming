@@ -10,8 +10,7 @@ int main() {
     ll n, m;
     cin >> n >> m;
 
-    vector<vector<ll>> al(n);
-    vector<vector<ll>> cap(n, vector<ll>(n));
+    vector<vector<ll>> cap(n, vector<ll>(n)), al(n);
     for(ll i = 0; i < m; i++) {
         ll a, b;
         cin >> a >> b, --a, --b;
@@ -21,19 +20,19 @@ int main() {
         al[b].push_back(a);
     }
 
-    vector<ll> p(n);
+    vector<ll> p;
     auto bfs = [&](ll s, ll t) -> ll {
         p.assign(n, -1);
         p[s] = -2;
         queue<array<ll, 2>> q({{s, (ll)1e18}});
         while(sz(q)) {
-            auto [u, aug_flow] = q.front();
+            auto [u, flow] = q.front();
             q.pop();
 
             for(auto v: al[u])
                 if(p[v] == -1 && cap[u][v]) {
                     p[v] = u;
-                    ll nw_flow = min(aug_flow, cap[u][v]);
+                    ll nw_flow = min(flow, cap[u][v]);
                     if(v == t)
                         return nw_flow;
 
@@ -44,15 +43,14 @@ int main() {
         return 0;
     };
 
-    vector<vector<ll>> flow(n, vector<ll>(n));
-    ll mx_flow = 0, aug_flow;
-    while(aug_flow = bfs(0, n - 1)) {
-        mx_flow += aug_flow;
+    ll mx_flow = 0, aug;
+    while(aug = bfs(0, n - 1)) {
+        mx_flow += aug;
         ll cur = n - 1;
         while(cur) {
             ll prev = p[cur];
-            cap[prev][cur] -= aug_flow;
-            cap[cur][prev] += aug_flow;
+            cap[prev][cur] -= aug;
+            cap[cur][prev] += aug;
             cur = prev;
         }
     }
@@ -61,7 +59,7 @@ int main() {
     auto dfs = [&](ll u, auto&& dfs) -> void {
         vis[u] = 1;
         for(auto v: al[u])
-            if(!vis[v] && cap[u][v])
+            if(!vis[v] && cap[u][v]) 
                 dfs(v, dfs);
     };
 
@@ -70,7 +68,7 @@ int main() {
     cout << mx_flow << '\n';
     for(ll u = 0; u < n; u++) {
         if(!vis[u]) continue;
-        for(auto v: al[u]) 
+        for(auto v: al[u])
             if(!vis[v])
                 cout << u + 1 << ' ' << v + 1 << '\n';
     }

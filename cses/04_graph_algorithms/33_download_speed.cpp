@@ -20,7 +20,7 @@ int main() {
         al[b].push_back(a);
     }
 
-    vector<ll> p(n);
+    vector<ll> p;
     auto bfs = [&](ll s, ll t) -> ll {
         p.assign(n, -1);
         p[s] = -2;
@@ -43,14 +43,14 @@ int main() {
         return 0;
     };
 
-    ll mx_flow = 0, nw_flow;
-    while(nw_flow = bfs(0, n - 1)) {
-        mx_flow += nw_flow;
+    ll mx_flow = 0, aug;
+    while(aug = bfs(0, n - 1)) {
+        mx_flow += aug;
         ll cur = n - 1;
         while(cur) {
             ll prev = p[cur];
-            cap[prev][cur] -= nw_flow;
-            cap[cur][prev] += nw_flow;
+            cap[prev][cur] -= aug;
+            cap[cur][prev] += aug;
             cur = prev;
         }
     }

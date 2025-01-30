@@ -10,35 +10,35 @@ int main() {
     ll n, m;
     cin >> n >> m;
 
-    vector<vector<array<ll, 2>>> al(n);
-    vector<vector<ll>> al_u(n), cap(n, vector<ll>(n));
+    vector<vector<ll>> cap(n, vector<ll>(n));
+    vector<vector<array<ll, 2>>> al(n), al_u(n); 
     for(ll i = 0; i < m; i++) {
         ll a, b;
         cin >> a >> b, --a, --b;
 
+        cap[a][b]++;
         al[a].push_back({b, i});
-        al_u[a].push_back(b);
-        al_u[b].push_back(a);
-        cap[a][b] = 1;
+        al_u[a].push_back({b, i});
+        al_u[b].push_back({a, i});
     }
 
-    vector<ll> p(n);
+    vector<ll> p;
     auto bfs = [&](ll s, ll t) -> ll {
         p.assign(n, -1);
         p[s] = -2;
         queue<array<ll, 2>> q({{s, (ll)1e18}});
         while(sz(q)) {
-            auto [u, aug] = q.front();
+            auto [u, flow] = q.front();
             q.pop();
 
-            for(auto v: al_u[u])
+            for(auto [v, ign]: al_u[u])
                 if(p[v] == -1 && cap[u][v]) {
                     p[v] = u;
-                    ll nw_aug = min(aug, cap[u][v]);
+                    ll nw_flow = min(flow, cap[u][v]);
                     if(v == t)
-                        return nw_aug;
+                        return nw_flow;
 
-                    q.push({v, nw_aug});
+                    q.push({v, nw_flow});
                 }
         }
 
@@ -57,27 +57,29 @@ int main() {
         }
     }
 
-    vector<ll> vis(m), pt;
+    vector<vector<ll>> ans;
+    vector<ll> vis(n), e_vis(m);
     auto dfs = [&](ll u, auto&& dfs) -> void {
-        pt.push_back(u);
+        ans.back().push_back(u);
+        vis[u] = 1;
         if(u == n - 1)
             return;
 
         for(auto [v, id]: al[u])
-            if(!vis[id] && !cap[u][v]) {
+            if(!vis[v] && !cap[u][v] && !e_vis[id]) {
+                e_vis[id] = 1;
                 dfs(v, dfs);
-                vis[id] = 1;
-                return;
+                break;
             }
     };
 
     cout << mx_flow << '\n';
     for(ll i = 0; i < mx_flow; i++) {
-        pt.clear();
+        ans.emplace_back();
+        vis.assign(n, 0);
         dfs(0, dfs);
-
-        cout << sz(pt) << '\n';
-        for(ll j = 0; j < sz(pt); j++) 
-            cout << pt[j] + 1 << (" \n")[j == sz(pt) - 1];
+        cout << sz(ans.back()) << '\n';
+        for(ll j = 0; j < sz(ans.back()); j++) 
+            cout << ans.back()[j] + 1 << (" \n")[j == sz(ans.back()) - 1];
     }
 }
